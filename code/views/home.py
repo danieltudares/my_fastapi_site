@@ -1,23 +1,20 @@
+from viewmodels.shared.viewmodel import ViewModelBase
+from viewmodels.home.indexviewmodel import IndexViewModel
 import fastapi
 from fastapi_chameleon import template
+from starlette.requests import Request
 
 router = fastapi.APIRouter()
 
 @router.get('/')
 @template(template_file='home/index.html')
-def index():
-    return {
-        'package_count': 274_000,
-        'release_count': 2_234_855,
-        'user_count': 73_586,
-        'packages': [
-            {'id': 'fastapi', 'summary': 'A great web framework'},
-            {'id': 'uvicorn', 'summary': 'Your favorite ASGI server'},
-            {'id': 'httpx', 'summary': 'Requests for async world'},
-        ]
-    }
+def index(request: Request):
+    vm = IndexViewModel(request)
+    return vm.to_dict()
 
 @router.get('/about')
 @template()
-def about():
+def about(request: Request):
+    vm = ViewModelBase(request)
+    #TODO
     return {}
